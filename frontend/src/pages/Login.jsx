@@ -11,13 +11,18 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
+  const { isAuthenticated, loading, error, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      // Redirect to admin dashboard if user is an admin
+      if (user?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     const result = await dispatch(login(formData));
     if (!result.error) {
-      navigate('/dashboard');
+      // The navigation will be handled by the useEffect above
     }
   };
 
@@ -77,7 +82,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-black hover:bg-primary-700"
+            className="w-full px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-white hover:bg-primary-700"
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}

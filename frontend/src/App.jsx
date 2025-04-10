@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import Complaints from './pages/Complaints';
 import ComplaintDetail from './pages/ComplaintDetail';
 import Articles from './pages/Articles';
@@ -22,7 +23,7 @@ import CreateArticle from './pages/CreateArticle';
 
 function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const { isAuthenticated, loading, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -56,7 +57,14 @@ function App() {
           } />
           <Route path="/dashboard" element={
             <main className="container mx-auto px-4 py-8">
-              <PrivateRoute><Dashboard /></PrivateRoute>
+              <PrivateRoute>
+                {user?.role === 'admin' ? <Navigate to="/admin" /> : <Dashboard />}
+              </PrivateRoute>
+            </main>
+          } />
+          <Route path="/admin" element={
+            <main className="container mx-auto px-4 py-8">
+              <AdminRoute><AdminDashboard /></AdminRoute>
             </main>
           } />
           <Route path="/complaints" element={

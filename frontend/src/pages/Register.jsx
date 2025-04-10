@@ -8,10 +8,13 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'user' // Default role is user
   });
 
   const [passwordError, setPasswordError] = useState('');
+  const [adminCode, setAdminCode] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,12 +30,34 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleAdminToggle = (e) => {
+    setIsAdmin(e.target.checked);
+    if (!e.target.checked) {
+      setFormData({ ...formData, role: 'user' });
+      setAdminCode('');
+    }
+  };
+
+  const handleAdminCodeChange = (e) => {
+    setAdminCode(e.target.value);
+    if (e.target.value === 'ADMIN123') { // This should be a secure code in production
+      setFormData({ ...formData, role: 'admin' });
+    } else {
+      setFormData({ ...formData, role: 'user' });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPasswordError('');
 
     if (formData.password !== formData.confirmPassword) {
       setPasswordError('Passwords do not match');
+      return;
+    }
+
+    if (isAdmin && adminCode !== 'ADMIN123') {
+      setPasswordError('Invalid admin code');
       return;
     }
 
@@ -106,7 +131,7 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-4">
             <label htmlFor="confirmPassword" className="block text-gray-700 mb-2">
               Confirm Password
             </label>
@@ -120,9 +145,35 @@ const Register = () => {
               required
             />
           </div>
+          <div className="mb-4">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={isAdmin}
+                onChange={handleAdminToggle}
+                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              />
+              <span className="text-gray-700">Register as Admin</span>
+            </label>
+          </div>
+          {isAdmin && (
+            <div className="mb-6">
+              <label htmlFor="adminCode" className="block text-gray-700 mb-2">
+                Admin Code
+              </label>
+              <input
+                type="password"
+                id="adminCode"
+                value={adminCode}
+                onChange={handleAdminCodeChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                required={isAdmin}
+              />
+            </div>
+          )}
           <button
             type="submit"
-            className="w-full px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-black hover:bg-primary-700"
+            className="w-full px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-white hover:bg-primary-700"
             disabled={loading}
           >
             {loading ? 'Registering...' : 'Register'}

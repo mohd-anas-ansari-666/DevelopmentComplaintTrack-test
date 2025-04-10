@@ -77,6 +77,24 @@ export const deleteArticle = createAsyncThunk(
   }
 );
 
+// Publish article
+export const publishArticle = createAsyncThunk(
+  'articles/publish',
+  async (id, { rejectWithValue, getState }) => {
+    try {
+      const { token } = getState().auth;
+      const response = await axios.patch(
+        `${API_URL}/articles/${id}/publish`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   articles: [],
   currentArticle: null,
@@ -165,6 +183,25 @@ const articleSlice = createSlice({
         }
       })
       .addCase(deleteArticle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      // Publish article
+      .addCase(publishArticle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(publishArticle.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.articles.findIndex(a => a._id === action.payload._id);
+        if (index !== -1) {
+          state.articles[index] = action.payload;
+        }
+        if (state.currentArticle?._id === action.payload._id) {
+          state.currentArticle = action.payload;
+        }
+      })
+      .addCase(publishArticle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       });

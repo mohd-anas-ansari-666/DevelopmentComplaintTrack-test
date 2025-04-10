@@ -12,7 +12,8 @@ import {
   ExclamationCircleIcon,
   CheckCircleIcon,
   XCircleIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  ArrowPathIcon
 } from '@heroicons/react/24/outline';
 
 const ComplaintDetail = () => {
@@ -24,9 +25,13 @@ const ComplaintDetail = () => {
   const [comment, setComment] = useState('');
   const [status, setStatus] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     dispatch(getComplaintById(id));
+    return () => {
+      dispatch(clearError());
+    };
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -52,7 +57,14 @@ const ComplaintDetail = () => {
   };
 
   const handleStatusUpdate = async () => {
-    await dispatch(updateComplaintStatus({ id, status, assignedTo }));
+    setUpdating(true);
+    try {
+      await dispatch(updateComplaintStatus({ id, status, assignedTo })).unwrap();
+    } catch (err) {
+      console.error('Failed to update status:', err);
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const handleCommentSubmit = async (e) => {
@@ -119,25 +131,45 @@ const ComplaintDetail = () => {
         {user?.role === 'admin' && (
           <div className="border-t pt-6">
             <h3 className="text-lg font-semibold mb-4">Update Status</h3>
-            <div className="flex space-x-4">
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="input max-w-xs"
-              >
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Resolved">Resolved</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-              <button
-                onClick={handleStatusUpdate}
-                className="btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200"
-                disabled={status === complaint.status}
-              >
-                Update Status
-              </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Resolved">Resolved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+                <input
+                  type="text"
+                  value={assignedTo}
+                  onChange={(e) => setAssignedTo(e.target.value)}
+                  placeholder="User ID (optional)"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
             </div>
+            <button
+              onClick={handleStatusUpdate}
+              disabled={updating || (status === complaint.status && assignedTo === (complaint.assignedTo?._id || ''))}
+              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {updating ? (
+                <>
+                  <ArrowPathIcon className="h-5 w-5 mr-2 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                'Update Status'
+              )}
+            </button>
           </div>
         )}
       </div>
@@ -150,28 +182,37 @@ const ComplaintDetail = () => {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Add a comment..."
-            className="input h-24 mb-2"
-          />
-          <button type="submit" className="btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200">
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            rows="3"
+          ></textarea>
+          <button
+            type="submit"
+            className="mt-2 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200"
+            disabled={!comment.trim()}
+          >
             Add Comment
           </button>
         </form>
 
-        <div className="space-y-4">
-          {complaint.comments.map((comment, index) => (
-            <div key={index} className="border-b pb-4 last:border-b-0">
-              <div className="flex items-center mb-2">
-                <UserCircleIcon className="h-5 w-5 text-gray-500 mr-2" />
-                <span className="font-medium">{comment.user.name}</span>
-                <span className="mx-2 text-gray-500">•</span>
-                <span className="text-gray-500">
-                  {new Date(comment.createdAt).toLocaleDateString()}
-                </span>
+        {complaint.comments && complaint.comments.length > 0 ? (
+          <div className="space-y-4">
+            {complaint.comments.map((comment, index) => (
+              <div key={index} className="border-b pb-4 last:border-b-0">
+                <div className="flex items-center mb-2">
+                  <UserCircleIcon className="h-5 w-5 text-gray-500 mr-2" />
+                  <span className="font-medium">{comment.user.name}</span>
+                  <span className="mx-2 text-gray-400">•</span>
+                  <span className="text-sm text-gray-500">
+                    {new Date(comment.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-gray-700">{comment.text}</p>
               </div>
-              <p className="text-gray-700">{comment.text}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No comments yet.</p>
+        )}
       </div>
     </div>
   );

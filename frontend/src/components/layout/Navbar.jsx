@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/authSlice';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { UserCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon, ChevronDownIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -33,6 +33,12 @@ const Navbar = () => {
                 <Link to="/complaints" className="text-gray-600 hover:text-primary-600">
                   Complaints
                 </Link>
+                {user?.role === 'admin' && (
+                  <Link to="/admin" className="flex items-center text-gray-600 hover:text-primary-600">
+                    <ShieldCheckIcon className="h-5 w-5 mr-1" />
+                    Admin
+                  </Link>
+                )}
                 <Menu as="div" className="relative">
                   <Menu.Button className="flex items-center space-x-2 text-gray-600 hover:text-primary-600">
                     <UserCircleIcon className="h-6 w-6" />
@@ -62,18 +68,32 @@ const Navbar = () => {
                         )}
                       </Menu.Item>
                       {user?.role === 'admin' && (
-                        <Menu.Item>
-                          {({ active }) => (
-                            <Link
-                              to="/articles/create"
-                              className={`${
-                                active ? 'bg-gray-100' : ''
-                              } block px-4 py-2 text-sm text-gray-700`}
-                            >
-                              Create Article
-                            </Link>
-                          )}
-                        </Menu.Item>
+                        <>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                to="/admin"
+                                className={`${
+                                  active ? 'bg-gray-100' : ''
+                                } block px-4 py-2 text-sm text-gray-700`}
+                              >
+                                Admin Dashboard
+                              </Link>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                to="/articles/create"
+                                className={`${
+                                  active ? 'bg-gray-100' : ''
+                                } block px-4 py-2 text-sm text-gray-700`}
+                              >
+                                Create Article
+                              </Link>
+                            )}
+                          </Menu.Item>
+                        </>
                       )}
                       <Menu.Item>
                         {({ active }) => (
