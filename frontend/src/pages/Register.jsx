@@ -37,7 +37,10 @@ const Register = () => {
     }
 
     const { confirmPassword, ...registerData } = formData;
-    dispatch(register(registerData));
+    const result = await dispatch(register(registerData));
+    if (!result.error) {
+      navigate('/dashboard');
+    }
   };
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const Register = () => {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="card">
+      <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -71,7 +74,7 @@ const Register = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
             />
           </div>
@@ -85,7 +88,7 @@ const Register = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
             />
           </div>
@@ -99,9 +102,8 @@ const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
-              minLength="6"
             />
           </div>
           <div className="mb-6">
@@ -114,14 +116,13 @@ const Register = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
-              minLength="6"
             />
           </div>
           <button
             type="submit"
-            className="btn btn-primary w-full"
+            className="w-full px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-black hover:bg-primary-700"
             disabled={loading}
           >
             {loading ? 'Registering...' : 'Register'}

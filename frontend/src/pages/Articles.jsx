@@ -26,14 +26,14 @@ const Articles = () => {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Knowledge Base</h1>
         {user?.role === 'admin' && (
-          <Link to="/articles/create" className="btn btn-primary">
+          <Link to="/articles/create" className="btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200">
             Create Article
           </Link>
         )}
       </div>
 
       {/* Filter */}
-      <div className="card mb-6">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <button

@@ -25,7 +25,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(login(formData));
+    const result = await dispatch(login(formData));
+    if (!result.error) {
+      navigate('/dashboard');
+    }
   };
 
   useEffect(() => {
@@ -36,7 +39,7 @@ const Login = () => {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="card">
+      <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -54,7 +57,7 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
             />
           </div>
@@ -68,13 +71,13 @@ const Login = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
             />
           </div>
           <button
             type="submit"
-            className="btn btn-primary w-full"
+            className="w-full px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-black hover:bg-primary-700"
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}

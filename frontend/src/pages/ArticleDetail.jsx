@@ -38,7 +38,7 @@ const ArticleDetail = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="card mb-6">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h1 className="text-3xl font-bold mb-2">{article.title}</h1>
@@ -56,7 +56,7 @@ const ArticleDetail = () => {
             </div>
           </div>
           {user?.role === 'admin' && (
-            <Link to={`/articles/edit/${article._id}`} className="btn btn-primary">
+            <Link to={`/articles/edit/${article._id}`} className="btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200">
               Edit Article
             </Link>
           )}

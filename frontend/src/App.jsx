@@ -42,20 +42,54 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        <main className="container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
-            <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
-            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/complaints" element={<PrivateRoute><Complaints /></PrivateRoute>} />
-            <Route path="/complaints/:id" element={<PrivateRoute><ComplaintDetail /></PrivateRoute>} />
-            <Route path="/complaints/create" element={<PrivateRoute><CreateComplaint /></PrivateRoute>} />
-            <Route path="/articles" element={<Articles />} />
-            <Route path="/articles/:id" element={<ArticleDetail />} />
-            <Route path="/articles/create" element={<AdminRoute><CreateArticle /></AdminRoute>} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={
+            <main className="container mx-auto px-4 py-8">
+              {!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />}
+            </main>
+          } />
+          <Route path="/register" element={
+            <main className="container mx-auto px-4 py-8">
+              {!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />}
+            </main>
+          } />
+          <Route path="/dashboard" element={
+            <main className="container mx-auto px-4 py-8">
+              <PrivateRoute><Dashboard /></PrivateRoute>
+            </main>
+          } />
+          <Route path="/complaints" element={
+            <main className="container mx-auto px-4 py-8">
+              <PrivateRoute><Complaints /></PrivateRoute>
+            </main>
+          } />
+          <Route path="/complaints/:id" element={
+            <main className="container mx-auto px-4 py-8">
+              <PrivateRoute><ComplaintDetail /></PrivateRoute>
+            </main>
+          } />
+          <Route path="/complaints/create" element={
+            <main className="container mx-auto px-4 py-8">
+              <PrivateRoute><CreateComplaint /></PrivateRoute>
+            </main>
+          } />
+          <Route path="/articles" element={
+            <main className="container mx-auto px-4 py-8">
+              <Articles />
+            </main>
+          } />
+          <Route path="/articles/:id" element={
+            <main className="container mx-auto px-4 py-8">
+              <ArticleDetail />
+            </main>
+          } />
+          <Route path="/articles/create" element={
+            <main className="container mx-auto px-4 py-8">
+              <AdminRoute><CreateArticle /></AdminRoute>
+            </main>
+          } />
+        </Routes>
       </div>
     </Router>
   );

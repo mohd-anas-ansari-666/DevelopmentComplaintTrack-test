@@ -28,7 +28,7 @@ const CreateComplaint = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="card">
+      <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold mb-6">Create New Complaint</h2>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -46,7 +46,7 @@ const CreateComplaint = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
             />
           </div>
@@ -59,7 +59,7 @@ const CreateComplaint = () => {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               required
             >
               <option value="Infrastructure">Infrastructure</option>
@@ -77,7 +77,7 @@ const CreateComplaint = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="input h-32"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent h-32"
               required
             />
           </div>
@@ -89,7 +89,7 @@ const CreateComplaint = () => {
             >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button type="submit" className="btn px-4 py-2 bg-primary-600 text-black rounded-md hover:bg-primary-700 transition-colors duration-200" disabled={loading}>
               {loading ? 'Creating...' : 'Create Complaint'}
             </button>
           </div>

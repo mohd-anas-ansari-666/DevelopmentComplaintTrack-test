@@ -87,7 +87,7 @@ const ComplaintDetail = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="card mb-6">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h1 className="text-2xl font-bold mb-2">{complaint.title}</h1>
@@ -132,7 +132,7 @@ const ComplaintDetail = () => {
               </select>
               <button
                 onClick={handleStatusUpdate}
-                className="btn btn-primary"
+                className="btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200"
                 disabled={status === complaint.status}
               >
                 Update Status
@@ -143,7 +143,7 @@ const ComplaintDetail = () => {
       </div>
 
       {/* Comments Section */}
-      <div className="card">
+      <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold mb-4">Comments</h3>
         <form onSubmit={handleCommentSubmit} className="mb-6">
           <textarea
@@ -152,7 +152,7 @@ const ComplaintDetail = () => {
             placeholder="Add a comment..."
             className="input h-24 mb-2"
           />
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200">
             Add Comment
           </button>
         </form>

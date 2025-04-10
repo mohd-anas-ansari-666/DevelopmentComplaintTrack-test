@@ -52,7 +52,7 @@ const Dashboard = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="card bg-primary-50">
+        <div className="bg-white rounded-lg shadow-md p-6 bg-primary-50">
           <div className="flex items-center">
             <ClipboardDocumentListIcon className="h-8 w-8 text-primary-600 mr-4" />
             <div>
@@ -61,7 +61,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="card bg-yellow-50">
+        <div className="bg-white rounded-lg shadow-md p-6 bg-yellow-50">
           <div className="flex items-center">
             <ClockIcon className="h-8 w-8 text-yellow-600 mr-4" />
             <div>
@@ -70,7 +70,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="card bg-blue-50">
+        <div className="bg-white rounded-lg shadow-md p-6 bg-blue-50">
           <div className="flex items-center">
             <ExclamationCircleIcon className="h-8 w-8 text-blue-600 mr-4" />
             <div>
@@ -79,7 +79,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="card bg-green-50">
+        <div className="bg-white rounded-lg shadow-md p-6 bg-green-50">
           <div className="flex items-center">
             <CheckCircleIcon className="h-8 w-8 text-green-600 mr-4" />
             <div>
@@ -91,22 +91,24 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Complaints */}
-      <div className="card mb-8">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Recent Complaints</h2>
-          <Link to="/complaints/create" className="btn btn-primary">
+          <Link to="/complaints/create" className="px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-white hover:bg-primary-700">
             New Complaint
           </Link>
         </div>
         {complaintsLoading ? (
-          <div className="text-center py-4">Loading...</div>
+          <div className="flex justify-center py-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600"></div>
+          </div>
         ) : complaints.length === 0 ? (
-          <div className="text-center py-4 text-gray-600">No complaints found</div>
+          <p className="text-gray-500 text-center py-4">No complaints found</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Title
                   </th>
@@ -125,21 +127,22 @@ const Dashboard = () => {
                 {complaints.slice(0, 5).map((complaint) => (
                   <tr key={complaint._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        to={`/complaints/${complaint._id}`}
-                        className="text-primary-600 hover:text-primary-700"
-                      >
+                      <Link to={`/complaints/${complaint._id}`} className="text-primary-600 hover:text-primary-800">
                         {complaint.title}
                       </Link>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{complaint.category}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                        {complaint.category}
+                      </span>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         {getStatusIcon(complaint.status)}
                         <span className="ml-2">{complaint.status}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(complaint.createdAt).toLocaleDateString()}
                     </td>
                   </tr>
@@ -151,47 +154,38 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Articles */}
-      <div className="card">
+      <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Recent Articles</h2>
           {user?.role === 'admin' && (
-            <Link to="/articles/create" className="btn btn-primary">
+            <Link to="/articles/create" className="px-4 py-2 rounded-md font-medium transition-colors duration-200 bg-primary-600 text-white hover:bg-primary-700">
               New Article
             </Link>
           )}
         </div>
         {articlesLoading ? (
-          <div className="text-center py-4">Loading...</div>
+          <div className="flex justify-center py-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600"></div>
+          </div>
         ) : articles.length === 0 ? (
-          <div className="text-center py-4 text-gray-600">No articles found</div>
+          <p className="text-gray-500 text-center py-4">No articles found</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {articles.slice(0, 3).map((article) => (
-              <div key={article._id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold mb-2">
-                    <Link
-                      to={`/articles/${article._id}`}
-                      className="text-primary-600 hover:text-primary-700"
-                    >
-                      {article.title}
-                    </Link>
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    By {article.author.name} • {new Date(article.createdAt).toLocaleDateString()}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {article.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+              <Link
+                key={article._id}
+                to={`/articles/${article._id}`}
+                className="block p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200"
+              >
+                <h3 className="font-medium text-primary-600 mb-2">{article.title}</h3>
+                <p className="text-sm text-gray-600 line-clamp-2">{article.content.substring(0, 100)}...</p>
+                <div className="mt-2 flex items-center text-xs text-gray-500">
+                  <DocumentTextIcon className="h-4 w-4 mr-1" />
+                  <span>{article.category}</span>
+                  <span className="mx-2">•</span>
+                  <span>{new Date(article.createdAt).toLocaleDateString()}</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

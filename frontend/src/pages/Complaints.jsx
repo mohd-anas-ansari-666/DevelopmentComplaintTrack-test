@@ -44,20 +44,20 @@ const Complaints = () => {
     <div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Complaints</h1>
-        <Link to="/complaints/create" className="btn btn-primary">
+        <Link to="/complaints/create" className="btn px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200">
           New Complaint
         </Link>
       </div>
 
       {/* Filter */}
-      <div className="card mb-6">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <div className="flex items-center space-x-4">
           <FunnelIcon className="h-5 w-5 text-gray-500" />
           <span className="text-gray-700">Filter by status:</span>
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="input max-w-xs"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent max-w-xs"
           >
             <option value="all">All</option>
             <option value="Pending">Pending</option>
@@ -69,7 +69,7 @@ const Complaints = () => {
       </div>
 
       {/* Complaints List */}
-      <div className="card">
+      <div className="bg-white rounded-lg shadow-md p-6">
         {loading ? (
           <div className="text-center py-4">Loading...</div>
         ) : filteredComplaints.length === 0 ? (
